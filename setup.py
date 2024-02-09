@@ -6,6 +6,7 @@ setup(
     version='0.0.1',
     install_requires=[
         'python_version>="3.8"',
+        "pytest"
     ],
     package_data={ 'PyLambda_OG': ['LambdaC/lambda.so'] },
 )

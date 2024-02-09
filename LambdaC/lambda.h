@@ -153,6 +153,8 @@ interpreter;
 extern interpreter *initialize_lambda (parmsLambda  * Params);
 extern void free_interpreter (interpreter * Interp);
 extern char *reduce_lambda (char *in, interpreter * Interp);
+extern char *reduce_expression (char *in);
+
 extern char *standardize (char *expression, interpreter * Interp);
 extern char *bind_all_free_vars (char *expression, interpreter * Interp);
 extern int  Free_Variables (char *expression, interpreter * Interp);

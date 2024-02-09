@@ -1,7 +1,9 @@
-PROG = lambda
+PROG = lambda.so
 
 CC	= gcc
-LIBS    = 
+CFLAGS   = -fPIC \
+	      -shared
+LIBS = 
 
 FILES   = lambda.c \
 	  utilities.c

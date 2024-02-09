@@ -46,6 +46,7 @@ Translated and rewritten by
 PUBLIC interpreter *initialize_lambda (parmsLambda * Params);
 PUBLIC void free_interpreter (interpreter * Interp);
 PUBLIC char *reduce_lambda (char *in, interpreter * Interp);
+PUBLIC char *reduce_expression (char *in);
 PUBLIC char *standardize (char *expression, interpreter * Interp);
 PUBLIC char *bind_all_free_vars (char *expression, interpreter * Interp);
 PUBLIC int  Free_Variables (char *expression, interpreter * Interp);
@@ -3666,6 +3667,7 @@ get_expression (FILE * fp)
 int
 main (int argc, char **argv)
 {
+  
   char *expression, *correct, *result, *stdrd;
   int mode, i = 0;
   FILE *fp, *fp2, *fopen ();
@@ -3685,15 +3687,22 @@ main (int argc, char **argv)
 
   Lambda = initialize_lambda (Parameters);
 
-  printf ("perform test suite (0) or enter interactive mode (1)\n");
-  scanf ("%d", &mode);
+//   printf ("perform test suite (0) or enter interactive mode (1)\n");
+//   scanf ("%d", &mode);
 
-  if (mode)
+
+
+	//   printf ("enter expression\n\n");
+    if (argc > 1)
     {
-      while (1)
-	{
-	  printf ("enter expression\n\n");
-	  expression = get_expression (stdin);
+      printf ("Usage: %s lambda expression\n", argv[0]);
+      expression = argv[1];
+    }
+    else
+    {
+        expression = get_expression (stdin);
+    }
+	  
 	  printf ("\nexpression\n%s\n", expression);
 
 	  result = reduce_lambda (expression, Lambda);
@@ -3708,46 +3717,73 @@ main (int argc, char **argv)
 
 	  printf ("standardized\n%s\n\n", stdrd);
 
-	  free (result);
-	  free (stdrd);
-	  free (expression);
+	//   free (result);
+	//   free (stdrd);
+	//   free (expression);
 	}
-    }
-  else
-    {
-      fp = fopen ("lambda.test", "r");
-      if (fp == NULL)
-	{
-	  printf ("no file lambda.test\n");
-	  exit (0);
-	}
-      fp2 = fopen ("lambda.res", "r");
-      if (fp2 == NULL)
-	{
-	  printf ("no file lambda.res\n");
-	  exit (0);
-	}
-      while (1)
-	{
-	  i++;
-	  expression = get_expression (fp);
-	  correct    = get_line (fp2);
-	  printf ("-------------------------------------------------\n");
-	  printf ("%d\nREDUCE:\n%s\n", i, expression);
-	  result = reduce_lambda (expression, Lambda);
-	  if (!result)
-	    printf ("NO normal form achieved within limits.\n");
-	  else
-	    printf ("RESULT (reductions: %d):\n%s\n", Lambda->reductions, result);
-	  if (strcmp (result, correct) == 0)
-	    printf( "correct.\n");
-	  else
-	    {
-	      printf ("wrong! (does not compare with lambda.res)\n");
-	      exit (0);
-	    }
-	  free (expression);
-	  free (result);
-	}
-    }
+
+//   else
+//     {
+//       fp = fopen ("lambda.test", "r");
+//       if (fp == NULL)
+// 	{
+// 	  printf ("no file lambda.test\n");
+// 	  exit (0);
+// 	}
+//       fp2 = fopen ("lambda.res", "r");
+//       if (fp2 == NULL)
+// 	{
+// 	  printf ("no file lambda.res\n");
+// 	  exit (0);
+// 	}
+//       while (1)
+// 	{
+// 	  i++;
+// 	  expression = get_expression (fp);
+// 	  correct    = get_line (fp2);
+// 	  printf ("-------------------------------------------------\n");
+// 	  printf ("%d\nREDUCE:\n%s\n", i, expression);
+// 	  result = reduce_lambda (expression, Lambda);
+// 	  if (!result)
+// 	    printf ("NO normal form achieved within limits.\n");
+// 	  else
+// 	    printf ("RESULT (reductions: %d):\n%s\n", Lambda->reductions, result);
+// 	  if (strcmp (result, correct) == 0)
+// 	    printf( "correct.\n");
+// 	  else
+// 	    {
+// 	      printf ("wrong! (does not compare with lambda.res)\n");
+// 	      exit (0);
+// 	    }
+// 	  free (expression);
+// 	  free (result);
+// 	}
+//     }
+//}
+
+PUBLIC interpreter * init_interpreter(){
+    const interpreter *Lambda;
+    parmsLambda *Parameters;
+
+    Parameters = (parmsLambda *) space (sizeof (parmsLambda));
+
+    Parameters->heap_size = 4000;	/* size of heap */
+    Parameters->cycle_limit = 100000; /* maximum number of cycles */
+    Parameters->symbol_table_size = 500;	/* size of symbol table */
+    Parameters->stack_size = 2000;  /* stack size */
+    Parameters->name_length = 10;	/* max length of identifiers */
+    Parameters->standard_variable = 'x';	/* name of standard variable */
+    Parameters->error_fp = stdout;  /* error report */
+
+    Lambda = initialize_lambda (Parameters);
+    return Lambda;
+}
+
+PUBLIC char *
+reduce_expression (char *in) {
+    interpreter *global_lambda = init_interpreter();
+    char *result;
+    result = reduce_lambda (in, global_lambda);
+    result = standardize(result, global_lambda);
+    return result;
 }

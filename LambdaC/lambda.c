@@ -3782,8 +3782,13 @@ PUBLIC interpreter * init_interpreter(){
 PUBLIC char *
 reduce_expression (char *in) {
     interpreter *global_lambda = init_interpreter();
+    char *bound_expr;
+    char *reduced_expr;
     char *result;
-    result = reduce_lambda (in, global_lambda);
-    result = standardize(result, global_lambda);
+    // 
+    reduced_expr = reduce_lambda (in, global_lambda);
+    // printf(reduced_expr)
+    bound_expr = bind_all_free_vars(reduced_expr, global_lambda);
+    result = standardize(bound_expr, global_lambda);
     return result;
 }

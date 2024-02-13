@@ -3308,9 +3308,9 @@ bind_all_free_vars (char *expression, interpreter * Interp)
 
   L->output_expression[0] = '\0';
 
-  if (!expression)
+  if (!expression){
     return NULL;
-
+  }
   expr = (char *) space (sizeof (char) * ((len = strlen (expression)) + 2));
   strcpy (expr, expression);
   strcat (expr, ";");
@@ -3358,7 +3358,6 @@ bind_all_free_vars (char *expression, interpreter * Interp)
       strcat (bound, ".");
     }
   strcat (bound, expression);
-
   clear_free_vars_list (L->n_free_vars);	/* drop free vars list */
 
   return bound;
@@ -3782,13 +3781,23 @@ PUBLIC interpreter * init_interpreter(){
 PUBLIC char *
 reduce_expression (char *in) {
     interpreter *global_lambda = init_interpreter();
-    char *bound_expr;
+    char *standard_reduced;
     char *reduced_expr;
+    char *bound_expr;
     char *result;
-    // 
+    int free_vars;
+    // First reduce the expression
     reduced_expr = reduce_lambda (in, global_lambda);
-    // printf(reduced_expr)
-    bound_expr = bind_all_free_vars(reduced_expr, global_lambda);
-    result = standardize(bound_expr, global_lambda);
+    // Then standardize
+    standard_reduced = standardize(reduced_expr, global_lambda);
+    // Once Standardization has happened we can check for free variables. 
+    if (global_lambda->n_free_vars > 0){ // if there's free variables bind them and restandardize
+        bound_expr = bind_all_free_vars(standard_reduced, global_lambda);
+        result = standardize(bound_expr, global_lambda);
+    }
+    else{ // otherwise just return the result
+        result = standard_reduced;
+    }
+
     return result;
 }

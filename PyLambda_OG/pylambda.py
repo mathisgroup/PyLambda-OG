@@ -13,5 +13,5 @@ def reduce_lambda(expr):
     return str_result
 
 if __name__ == "__main__":
-    expr = " x"
-    print(reduce_lambda(expr))
+    expr = "\\x.(y)x"
+    print("Python: ",reduce_lambda(expr))

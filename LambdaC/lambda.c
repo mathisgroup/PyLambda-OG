@@ -3800,7 +3800,7 @@ reduce_expression (char *in) {
     }
     
     free_interpreter(global_lambda);
-    free(global_lambda);
+    // free(global_lambda);
     free(bound_expr);
     free(reduced_expr);
     return result;

@@ -3785,7 +3785,6 @@ reduce_expression (char *in) {
     char *reduced_expr;
     char *bound_expr;
     char *result;
-    int free_vars;
     // First reduce the expression
     reduced_expr = reduce_lambda (in, global_lambda);
     // Then standardize
@@ -3800,7 +3799,7 @@ reduce_expression (char *in) {
     }
     
     // free_interpreter(global_lambda);
-    free(global_lambda);
+    // free(global_lambda);
     free(bound_expr);
     free(reduced_expr);
     return result;

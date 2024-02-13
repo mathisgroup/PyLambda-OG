@@ -3470,10 +3470,10 @@ err (char *message)
 
   if (L->parms->error_fp)
     {
-      fprintf (L->parms->error_fp, "error %d at expression\n", L->error_number);
-      fprintf (L->parms->error_fp, "%s\n", L->input_expression);
-      fprintf (L->parms->error_fp, "%s", message);
-      fflush (L->parms->error_fp);
+    //   fprintf (L->parms->error_fp, "error %d at expression\n", L->error_number);
+    //   fprintf (L->parms->error_fp, "%s\n", L->input_expression);
+    //   fprintf (L->parms->error_fp, "%s", message);
+    //   fflush (L->parms->error_fp);
     }
   
   longjmp (RECOVER, 1);

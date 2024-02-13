@@ -3798,6 +3798,10 @@ reduce_expression (char *in) {
     else{ // otherwise just return the result
         result = standard_reduced;
     }
-
+    
+    free_interpreter(global_lambda);
+    free(global_lambda);
+    free(bound_expr);
+    free(reduced_expr);
     return result;
 }
